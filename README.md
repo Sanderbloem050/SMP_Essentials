@@ -4,14 +4,14 @@
 
 # SMP Essentials
 
-**De complete toolkit voor jouw Minecraft SMP** — valuta, winkels, een bank, jobs, een veilinghuis, land-claims en quality-of-life commando's.
+**De complete toolkit voor jouw Minecraft SMP** — valuta, winkels, een bank, jobs, een veilinghuis, land-claims, NPC-quests, bounties en quality-of-life commando's.
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-26.1.2-62B47A?style=flat-square)
 ![Loader](https://img.shields.io/badge/Loader-Fabric-DBB776?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-In%20ontwikkeling-orange?style=flat-square)
 
-📖 [Bekijk de volledige wiki](wiki/index.html)
+📖 [Bekijk de volledige wiki](https://sanderbloem050.github.io/SMP_Essentials/)
 
 </div>
 
@@ -29,7 +29,10 @@
 | 🏪 **Shopkeeper-NPC** | Instelbare winkel met kist-voorraad, eigen GUI en vanilla handelsscherm |
 | 🎁 **Loot Crates** | Schatkisten die je met een sleutel opent voor willekeurige beloningen |
 | 🏡 **Land & Claims** | Claim chunks, bescherm tegen grief, trust voor vrienden, zichtbare grenzen |
-| 🧭 **Quality of Life** | Homes, warps, `/spawn` en teleport-verzoeken (`/tpa`) |
+| 🧭 **Quality of Life** | Homes, warps, `/spawn`, teleport-verzoeken (`/tpa`), `/back` en death-chests |
+| 🎯 **Bounties** | Zet een prijs op iemands hoofd, win 'm terug in PvP |
+| 📜 **NPC-Quests** | Quest-NPC's die items innemen voor een beloning op je wallet |
+| ⚙️ **Server-instellingen** | GUI-venster voor OP's om mod-onderdelen aan/uit te zetten (`/smpadmin`) |
 
 ## 🚀 Installatie
 
@@ -56,13 +59,14 @@ De gebouwde jar staat na het builden in `build/libs/`.
 ```
 src/main/java/com/sanderbloem/currencymod/
 ├── data/        wallet (SavedData)
-├── economy/     veilinghuis
+├── economy/     veilinghuis + bounties
 ├── claims/      land-claims + chunk-randen
-├── qol/         homes / warps / locaties
+├── qol/         homes / warps / locaties / back / death-chest
 ├── jobs/        mining & farming beloningen
-├── entity/      shopkeeper-NPC
+├── config/      server-instellingen (aan/uit-schakelaars)
+├── entity/      shopkeeper- en quest-NPC
 ├── block/       bank- en loot-crate-blok
-├── menu/        custom GUI's (admin-shop, bank)
+├── menu/        custom GUI's (admin-shop, bank, instellingen)
 ├── client/      renderers & schermen
 ├── commands/    alle /commando's
 └── loot/        muntendrops in loot tables
@@ -97,9 +101,21 @@ src/main/java/com/sanderbloem/currencymod/
 - `/claim`, `/unclaim`, `/claims`, `/claim show`
 - `/trust <speler>`, `/untrust <speler>`
 
+**Back**
+- `/back` — naar vorige locatie of sterfplek
+
+**Bounties**
+- `/bounty set <speler> <bedrag>`, `/bounty list`
+
+**Quests**
+- `/questgiver spawn|setitem|setreward|toggleonce|remove`
+
+**Admin**
+- `/smpadmin` — server-instellingenvenster (OP)
+
 </details>
 
-Volledige uitleg, voorbeelden en GUI-screenshots: zie de [wiki](wiki/index.html).
+Volledige uitleg, voorbeelden en GUI-screenshots: zie de [wiki](https://sanderbloem050.github.io/SMP_Essentials/).
 
 ## 🗺️ Roadmap
 
@@ -107,11 +123,11 @@ Volledige uitleg, voorbeelden en GUI-screenshots: zie de [wiki](wiki/index.html)
 - [x] Shopkeeper-NPC met kist-voorraad
 - [x] Veilinghuis
 - [x] Land-claims met zichtbare grenzen
-- [x] Homes, warps, spawn, tpa
-- [x] Loot crates
+- [x] Homes, warps, spawn, tpa, `/back`, death-chest
+- [x] Loot crates, bounties & NPC-quests
+- [x] Server-instellingenvenster (`/smpadmin`)
 - [ ] Koop-én-verkoop-shops
-- [ ] `/back` + death-chest
-- [ ] Bounties & NPC-quests
+- [ ] Server-brede events
 
 ## 📜 Licentie
 

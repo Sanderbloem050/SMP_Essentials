@@ -11,7 +11,9 @@ public class CurrencyModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.register(ModEntities.SHOPKEEPER, ShopkeeperRenderer::new);
+        EntityRendererRegistry.register(ModEntities.QUEST_GIVER, QuestGiverRenderer::new);
         MenuScreens.register(ModMenus.ADMIN_SHOP, AdminShopScreen::new);
         MenuScreens.register(ModMenus.ATM_MENU, AtmScreen::new);
+        MenuScreens.register(ModMenus.CONFIG_MENU, ConfigScreen::new);
     }
 }

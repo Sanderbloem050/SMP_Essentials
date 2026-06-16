@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.sanderbloem.currencymod.qol.BackManager;
 import com.sanderbloem.currencymod.qol.HomesData;
 import com.sanderbloem.currencymod.qol.Location;
 import com.sanderbloem.currencymod.qol.TpaManager;
@@ -41,6 +42,7 @@ public class QolCommands {
         registerWarps(d);
         registerSpawn(d);
         registerTpa(d);
+        registerBack(d);
     }
 
     // ---------- Homes ----------
@@ -82,6 +84,7 @@ public class QolCommands {
         ServerPlayer p = ctx.getSource().getPlayerOrException();
         Location loc = HomesData.get(server(p)).getHome(p.getUUID(), name);
         if (loc == null) { ctx.getSource().sendFailure(Component.literal("§cGeen home '" + name + "'.")); return 0; }
+        BackManager.setLast(p.getUUID(), Location.of(p));
         if (!loc.teleport(p)) { ctx.getSource().sendFailure(Component.literal("§cDimensie bestaat niet meer.")); return 0; }
         ctx.getSource().sendSuccess(() -> Component.literal("§aTeleported naar home §f" + name), false);
         return 1;
@@ -105,6 +108,7 @@ public class QolCommands {
                             String name = StringArgumentType.getString(ctx, "naam");
                             Location loc = WarpsData.get(server(p)).getWarp(name);
                             if (loc == null) { ctx.getSource().sendFailure(Component.literal("§cGeen warp '" + name + "'.")); return 0; }
+                            BackManager.setLast(p.getUUID(), Location.of(p));
                             if (!loc.teleport(p)) { ctx.getSource().sendFailure(Component.literal("§cDimensie bestaat niet meer.")); return 0; }
                             ctx.getSource().sendSuccess(() -> Component.literal("§aWarp naar §f" + name), false);
                             return 1;
@@ -150,6 +154,7 @@ public class QolCommands {
             net.minecraft.world.level.storage.LevelData.RespawnData rd = server(p).overworld().getRespawnData();
             BlockPos sp = rd.pos();
             Location loc = new Location(rd.dimension(), sp.getX() + 0.5, sp.getY(), sp.getZ() + 0.5, rd.yaw(), rd.pitch());
+            BackManager.setLast(p.getUUID(), Location.of(p));
             loc.teleport(p);
             ctx.getSource().sendSuccess(() -> Component.literal("§aWelkom bij spawn!"), false);
             return 1;
@@ -171,8 +176,13 @@ public class QolCommands {
             if (r == null) { ctx.getSource().sendFailure(Component.literal("§cGeen openstaand verzoek.")); return 0; }
             ServerPlayer from = server(target).getPlayerList().getPlayer(r.from());
             if (from == null) { ctx.getSource().sendFailure(Component.literal("§cDie speler is offline.")); return 0; }
-            if (r.here()) Location.of(from).teleport(target);   // jij gaat naar de verzoeker
-            else Location.of(target).teleport(from);            // verzoeker komt naar jou
+            if (r.here()) {
+                BackManager.setLast(target.getUUID(), Location.of(target));
+                Location.of(from).teleport(target);   // jij gaat naar de verzoeker
+            } else {
+                BackManager.setLast(from.getUUID(), Location.of(from));
+                Location.of(target).teleport(from);    // verzoeker komt naar jou
+            }
             ctx.getSource().sendSuccess(() -> Component.literal("§aVerzoek geaccepteerd."), false);
             from.sendSystemMessage(Component.literal("§a" + target.getName().getString() + " accepteerde je teleport."));
             return 1;
@@ -199,6 +209,26 @@ public class QolCommands {
                 (here ? " wil dat je naar hem/haar teleporteert." : " wil naar je toe teleporteren.") +
                 " §7/tpaccept §7of §7/tpdeny"));
         return 1;
+    }
+
+    // ---------- Back ----------
+    private static void registerBack(CommandDispatcher<CommandSourceStack> d) {
+        d.register(Commands.literal("back").executes(ctx -> {
+            ServerPlayer p = ctx.getSource().getPlayerOrException();
+            Location target = BackManager.consumeBackTarget(p.getUUID());
+            if (target == null) {
+                ctx.getSource().sendFailure(Component.literal("§cGeen vorige locatie bekend."));
+                return 0;
+            }
+            Location current = Location.of(p);
+            if (!target.teleport(p)) {
+                ctx.getSource().sendFailure(Component.literal("§cDimensie bestaat niet meer."));
+                return 0;
+            }
+            BackManager.setLast(p.getUUID(), current);
+            ctx.getSource().sendSuccess(() -> Component.literal("§aTerug naar je vorige locatie."), false);
+            return 1;
+        }));
     }
 
     private static MinecraftServer server(ServerPlayer p) {

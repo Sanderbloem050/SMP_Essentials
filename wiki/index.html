@@ -113,6 +113,9 @@
       <a href="#crates">Loot Crates</a>
       <a href="#claims">Claims</a>
       <a href="#qol">Quality of Life</a>
+      <a href="#bounties">Bounties</a>
+      <a href="#quests">Quests</a>
+      <a href="#admin">Server-instellingen</a>
       <a href="#commands">Commando's</a>
       <a href="#roadmap">Roadmap</a>
     </div>
@@ -312,8 +315,59 @@
     <div class="card"><div class="ci">🌐</div><h4>Warps</h4><p>Server-brede teleportpunten (OP zet ze). <code>/warp</code>, <code>/setwarp</code>, <code>/delwarp</code>, <code>/warps</code>.</p></div>
     <div class="card"><div class="ci">🏁</div><h4>Spawn</h4><p>Snel terug naar de wereld-spawn met <code>/spawn</code>.</p></div>
     <div class="card"><div class="ci">🤝</div><h4>TPA</h4><p>Teleport-verzoeken tussen spelers. <code>/tpa</code>, <code>/tpahere</code>, <code>/tpaccept</code>, <code>/tpdeny</code>.</p></div>
+    <div class="card"><div class="ci">↩️</div><h4>/back</h4><p>Spring terug naar je vorige locatie — of naar je sterfplek als je net bent overleden.</p></div>
+    <div class="card"><div class="ci">⚰️</div><h4>Death Chest</h4><p>Bij overlijden vallen je spullen niet rond, maar landen veilig in een kist op je sterfplek.</p></div>
   </div>
-  <div class="callout tip">✨ Homes en warps overleven herstarts en werken cross-dimensie (overworld/nether/end), inclusief kijkrichting. Typ <code>/home </code> + Tab voor je opgeslagen homes.</div>
+  <div class="callout tip">✨ Homes en warps overleven herstarts en werken cross-dimensie (overworld/nether/end), inclusief kijkrichting. Typ <code>/home </code> + Tab voor je opgeslagen homes. <code>/back</code> onthoudt je locatie vóór elke teleport, en geeft voorrang aan je laatste sterfplek.</div>
+</div></section>
+
+<section id="bounties"><div class="wrap">
+  <h2><span class="ico">🎯</span> Bounties <span class="status done">klaar</span></h2>
+  <p class="lead">Zet een prijs op iemands hoofd — wie diegene in PvP verslaat, incasseert de beloning.</p>
+  <table>
+    <tr><th>Commando</th><th>Wat het doet</th></tr>
+    <tr><td><code>/bounty set &lt;speler&gt; &lt;bedrag&gt;</code></td><td>Zet een bounty (betaalt uit jouw wallet). Meerdere spelers kunnen stapelen.</td></tr>
+    <tr><td><code>/bounty list</code></td><td>Overzicht van alle open bounties, gesorteerd op bedrag.</td></tr>
+  </table>
+  <div class="callout tip">⚔️ Wie de bounty-speler in PvP doodt (geen zelfmoord, geen mob-kill) krijgt het volledige bedrag direct op de wallet — met een server-brede aankondiging.</div>
+</div></section>
+
+<section id="quests"><div class="wrap">
+  <h2><span class="ico">📜</span> NPC-Quests <span class="status done">klaar</span></h2>
+  <p class="lead">Een quest-NPC die items inneemt in ruil voor een beloning op je wallet.</p>
+  <h3>Plaatsen &amp; inrichten</h3>
+  <ol class="steps">
+    <li>Kijk naar een blok en typ <code>/questgiver spawn</code> — de NPC verschijnt daar (groenig getinte skin, herkenbaar t.o.v. de shopkeeper).</li>
+    <li>Houd het vereiste item vast: <code>/questgiver setitem &lt;aantal&gt;</code>.</li>
+    <li>Stel de beloning in: <code>/questgiver setreward &lt;bedrag&gt;</code>.</li>
+    <li>Optioneel: <code>/questgiver toggleonce</code> — quest maar één keer per speler beschikbaar.</li>
+  </ol>
+  <h3>Inleveren</h3>
+  <p><b>Rechtsklik</b> de NPC: heb je genoeg van het item, dan wordt het ingenomen en de beloning op je wallet gestort (met geluid + groene partikels). Te weinig? Je ziet precies hoeveel je nog mist. <b>Shift+rechtsklik</b> (eigenaar/OP) toont de huidige instellingen.</p>
+</div></section>
+
+<section id="admin"><div class="wrap">
+  <h2><span class="ico">⚙️</span> Server-instellingen <span class="status done">klaar</span></h2>
+  <p class="lead">Een GUI-venster voor OP's om hele mod-onderdelen aan/uit te zetten, zonder herstart.</p>
+  <div class="gui">
+    <div class="t">Server instellingen</div>
+    <div class="w">Jobs <span style="color:#6fe36f">AAN</span> <span class="btn">Wissel</span></div>
+    <div class="w">Claims <span style="color:#6fe36f">AAN</span> <span class="btn">Wissel</span></div>
+    <div class="w">Death Chest <span style="color:#6fe36f">AAN</span> <span class="btn">Wissel</span></div>
+    <div class="w">Loot Crates <span style="color:#e36f6f">UIT</span> <span class="btn">Wissel</span></div>
+    <div class="w">Bounties <span style="color:#6fe36f">AAN</span> <span class="btn">Wissel</span></div>
+    <div class="w">Veilinghuis <span style="color:#6fe36f">AAN</span> <span class="btn">Wissel</span></div>
+  </div>
+  <p>Open met <code>/smpadmin</code> (alleen OP). Schakelt direct en blijft bewaard na een herstart:</p>
+  <table>
+    <tr><th>Schakelaar</th><th>Effect indien UIT</th></tr>
+    <tr><td>Jobs</td><td>Geen wallet-beloning meer bij minen/oogsten.</td></tr>
+    <tr><td>Claims</td><td>Claim-bescherming wordt genegeerd (claims blijven geregistreerd).</td></tr>
+    <tr><td>Death Chest</td><td>Spullen vallen weer gewoon vanilla rond bij overlijden.</td></tr>
+    <tr><td>Loot Crates</td><td>Sleutels werken niet meer; spelers krijgen een melding.</td></tr>
+    <tr><td>Bounties</td><td><code>/bounty set</code> geblokkeerd; uitbetalen bij een kill stopt.</td></tr>
+    <tr><td>Veilinghuis</td><td><code>/ah sell</code> en <code>/ah buy</code> geblokkeerd.</td></tr>
+  </table>
 </div></section>
 
 <section id="commands"><div class="wrap">
@@ -343,6 +397,7 @@
     <tr><td><code>/tpahere &lt;speler&gt;</code></td><td>Vraag of iemand naar jou komt.</td></tr>
     <tr><td><code>/tpaccept</code></td><td>Verzoek accepteren.</td></tr>
     <tr><td><code>/tpdeny</code></td><td>Verzoek weigeren.</td></tr>
+    <tr><td>Back</td><td><code>/back</code></td><td>Terug naar vorige locatie of sterfplek.</td></tr>
     <tr><td rowspan="5">Veiling</td><td><code>/ah</code></td><td>Bekijk de marktplaats.</td></tr>
     <tr><td><code>/ah sell &lt;prijs&gt;</code></td><td>Item in hand te koop zetten.</td></tr>
     <tr><td><code>/ah buy &lt;id&gt;</code></td><td>Een aanbod kopen.</td></tr>
@@ -355,6 +410,14 @@
     <tr><td><code>/trust &lt;speler&gt;</code></td><td>Vriend bouwrechten geven.</td></tr>
     <tr><td><code>/untrust &lt;speler&gt;</code></td><td>Rechten afnemen.</td></tr>
     <tr><td>Crates</td><td>(rechtsklik met sleutel)</td><td>Loot crate openen.</td></tr>
+    <tr><td rowspan="2">Bounty</td><td><code>/bounty set &lt;speler&gt; &lt;bedrag&gt;</code></td><td>Bounty zetten.</td></tr>
+    <tr><td><code>/bounty list</code></td><td>Open bounties bekijken.</td></tr>
+    <tr><td rowspan="5">Quests</td><td><code>/questgiver spawn</code></td><td>Quest-NPC plaatsen op aangekeken blok.</td></tr>
+    <tr><td><code>/questgiver setitem &lt;aantal&gt;</code></td><td>Vereist item instellen (item in hand).</td></tr>
+    <tr><td><code>/questgiver setreward &lt;bedrag&gt;</code></td><td>Beloning instellen.</td></tr>
+    <tr><td><code>/questgiver toggleonce</code></td><td>Eenmalig per speler aan/uit.</td></tr>
+    <tr><td><code>/questgiver remove</code></td><td>Quest-NPC verwijderen.</td></tr>
+    <tr><td>Admin</td><td><code>/smpadmin</code> <span class="badge">OP</span></td><td>Server-instellingenvenster openen.</td></tr>
   </table>
 </div></section>
 
@@ -363,8 +426,9 @@
   <div class="grid">
     <div class="card"><div class="ci">💰</div><h4>Economie <span class="status done">grotendeels</span></h4><p>Munten, wallet, bank, jobs, shops &amp; veilinghuis ✓. Mogelijk nog: koop-én-verkoop-shops.</p></div>
     <div class="card"><div class="ci">🏡</div><h4>Land &amp; claims <span class="status done">klaar</span></h4><p>Claimen, bescherming, trust &amp; chunk-randen ✓. Mogelijk nog: kosten/limiet via munten.</p></div>
-    <div class="card"><div class="ci">🧭</div><h4>Quality of life <span class="status done">deels</span></h4><p>Homes, warps, spawn, tpa ✓. Mogelijk: /back &amp; death-chest.</p></div>
-    <div class="card"><div class="ci">🎉</div><h4>Events <span class="status done">deels</span></h4><p>Loot-crates ✓. Mogelijk nog: bounties, NPC-quests, server-events.</p></div>
+    <div class="card"><div class="ci">🧭</div><h4>Quality of life <span class="status done">klaar</span></h4><p>Homes, warps, spawn, tpa, /back &amp; death-chest ✓.</p></div>
+    <div class="card"><div class="ci">🎉</div><h4>Events <span class="status done">klaar</span></h4><p>Loot-crates, bounties &amp; NPC-quests ✓. Mogelijk nog: server-brede events.</p></div>
+    <div class="card"><div class="ci">⚙️</div><h4>Server-beheer <span class="status done">klaar</span></h4><p>GUI-instellingenvenster (<code>/smpadmin</code>) om mod-onderdelen aan/uit te zetten ✓.</p></div>
   </div>
 </div></section>
 

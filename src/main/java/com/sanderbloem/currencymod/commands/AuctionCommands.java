@@ -29,6 +29,10 @@ public class AuctionCommands {
                         .then(Commands.argument("prijs", LongArgumentType.longArg(1))
                                 .executes(ctx -> {
                                     ServerPlayer p = ctx.getSource().getPlayerOrException();
+                                    if (!com.sanderbloem.currencymod.config.ModConfig.get(server(p)).auctionEnabled) {
+                                        ctx.getSource().sendFailure(Component.literal("§7Het veilinghuis is momenteel uitgeschakeld."));
+                                        return 0;
+                                    }
                                     long price = LongArgumentType.getLong(ctx, "prijs");
                                     ItemStack hand = p.getMainHandItem();
                                     if (hand.isEmpty()) {
@@ -90,6 +94,10 @@ public class AuctionCommands {
 
     private static int buy(CommandSourceStack src, int id) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer p = src.getPlayerOrException();
+        if (!com.sanderbloem.currencymod.config.ModConfig.get(server(p)).auctionEnabled) {
+            src.sendFailure(Component.literal("§7Het veilinghuis is momenteel uitgeschakeld."));
+            return 0;
+        }
         AuctionData data = AuctionData.get(server(p));
         AuctionData.Listing l = data.get(id);
         if (l == null) { src.sendFailure(Component.literal("§cDat aanbod bestaat niet (meer).")); return 0; }

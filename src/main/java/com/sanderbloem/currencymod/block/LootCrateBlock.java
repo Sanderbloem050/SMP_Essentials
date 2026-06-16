@@ -33,6 +33,10 @@ public class LootCrateBlock extends Block {
             return InteractionResult.TRY_WITH_EMPTY_HAND; // val door naar useWithoutItem (hint)
         }
         if (!level.isClientSide() && level instanceof ServerLevel sl && player instanceof ServerPlayer sp) {
+            if (!com.sanderbloem.currencymod.config.ModConfig.get(sl.getServer()).cratesEnabled) {
+                sp.sendSystemMessage(Component.literal("§7Loot crates zijn momenteel uitgeschakeld."));
+                return InteractionResult.SUCCESS;
+            }
             stack.shrink(1); // sleutel verbruiken
             List<ItemStack> rewards = roll(sl.getRandom());
 
