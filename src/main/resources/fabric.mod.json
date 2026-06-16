@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "smpessentials",
+  "version": "1.0.0",
+  "name": "SMP Essentials",
+  "description": "Een complete SMP-toolkit: valuta, winkels, en meer. Voor Minecraft 26.x op Fabric.",
+  "authors": ["Sander Bloem"],
+  "license": "MIT",
+  "environment": "*",
+  "accessWidener": "smpessentials.accesswidener",
+  "entrypoints": {
+    "main": ["com.sanderbloem.currencymod.CurrencyMod"],
+    "client": ["com.sanderbloem.currencymod.client.CurrencyModClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": ">=26.1.0"
+  }
+}

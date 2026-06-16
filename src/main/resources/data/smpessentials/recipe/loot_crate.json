@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "GGG", "GCG", "GGG" ],
+  "key": { "G": "smpessentials:gold_coin", "C": "minecraft:chest" },
+  "result": { "id": "smpessentials:loot_crate", "count": 1 }
+}

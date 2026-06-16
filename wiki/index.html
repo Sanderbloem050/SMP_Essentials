@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMP Essentials — Mod Wiki</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#171b22; --panel2:#1e242d; --edge:#2a313c;
+    --text:#e6e9ef; --muted:#9aa4b2; --accent:#f5b942; --accent2:#5ec46a;
+    --copper:#c0703a; --silver:#c3c7d1; --gold:#e8b923;
+    --link:#6db3f2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  a{color:var(--link);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+  header.hero{
+    background:linear-gradient(135deg,#1b2330 0%,#0e1116 70%);
+    border-bottom:3px solid var(--accent);
+    padding:48px 0 40px;text-align:center;position:relative;overflow:hidden;
+  }
+  header.hero::after{content:"";position:absolute;inset:0;
+    background-image:radial-gradient(circle at 20% 30%,rgba(245,185,66,.08),transparent 40%),
+                     radial-gradient(circle at 80% 70%,rgba(94,196,106,.08),transparent 40%);}
+  .banner{max-width:100%;width:760px;border-radius:14px;border:2px solid var(--edge);
+    box-shadow:0 8px 30px rgba(0,0,0,.55);display:block;margin:0 auto 18px}
+  .coins{font-size:0;margin-bottom:14px}
+  .coin{display:inline-block;width:46px;height:46px;border-radius:50%;margin:0 6px;
+    border:3px solid rgba(0,0,0,.35);box-shadow:inset 0 -6px 10px rgba(0,0,0,.35),0 3px 8px rgba(0,0,0,.5);position:relative}
+  .coin.cu{background:radial-gradient(circle at 35% 30%,#e0935a,var(--copper))}
+  .coin.ag{background:radial-gradient(circle at 35% 30%,#eef0f5,var(--silver))}
+  .coin.au{background:radial-gradient(circle at 35% 30%,#ffe27a,var(--gold))}
+  h1{font-size:2.6rem;margin:.2em 0 .1em;letter-spacing:.5px}
+  .tagline{color:var(--muted);font-size:1.15rem;margin:0}
+  .badges{margin-top:18px}
+  .badge{display:inline-block;background:var(--panel2);border:1px solid var(--edge);color:var(--muted);
+    padding:4px 12px;border-radius:20px;font-size:.82rem;margin:3px}
+  .badge b{color:var(--accent)}
+
+  section{padding:34px 0;border-bottom:1px solid var(--edge)}
+  h2{font-size:1.6rem;margin:0 0 .6em;display:flex;align-items:center;gap:10px}
+  h2 .ico{font-size:1.4rem}
+  h3{font-size:1.15rem;margin:1.4em 0 .4em;color:var(--accent)}
+  p{margin:.5em 0}
+  .lead{font-size:1.1rem;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+  .card{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:18px;transition:transform .12s,border-color .12s}
+  .card:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .card .ci{font-size:1.7rem}
+  .card h4{margin:.4em 0 .3em;font-size:1.05rem}
+  .card p{color:var(--muted);font-size:.92rem;margin:0}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--panel);border-radius:10px;overflow:hidden}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--edge)}
+  th{background:var(--panel2);color:var(--accent);font-size:.9rem;text-transform:uppercase;letter-spacing:.5px}
+  tr:last-child td{border-bottom:none}
+  td code,p code,li code{background:#0a0d12;border:1px solid var(--edge);border-radius:5px;padding:1px 7px;font-family:'Consolas',monospace;font-size:.88em;color:var(--accent2)}
+  .pill{display:inline-block;width:13px;height:13px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .pill.cu{background:var(--copper)} .pill.ag{background:var(--silver)} .pill.au{background:var(--gold)}
+
+  .steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+  .steps li{position:relative;padding:12px 12px 12px 52px;margin-bottom:10px;background:var(--panel);border:1px solid var(--edge);border-radius:10px}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;background:var(--accent);color:#1a1a1a;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .callout{background:var(--panel2);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 16px;margin:16px 0}
+  .callout.warn{border-left-color:#e0683a}
+  .callout.tip{border-left-color:var(--accent2)}
+
+  .gui{background:#2e2e33;border:3px solid #1a1a1e;border-radius:6px;max-width:300px;margin:18px auto;padding:14px;font-family:'Consolas',monospace}
+  .gui .t{color:var(--gold);text-shadow:1px 1px 0 #000;font-size:.95rem;margin-bottom:6px}
+  .gui .w{color:#fff;text-shadow:1px 1px 0 #000;font-size:.8rem;margin:4px 0}
+  .gui .slots{display:flex;gap:4px;margin:6px 0}
+  .gui .slot{width:26px;height:26px;background:#8b8b8b;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+  .gui .btn{display:inline-block;background:#6b6f78;border:2px solid #2a2d33;color:#fff;text-shadow:1px 1px 0 #000;
+    padding:4px 8px;border-radius:3px;font-size:.78rem;margin:3px 3px 0 0}
+
+  .status{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:2px}
+  .status.done{background:rgba(94,196,106,.16);color:var(--accent2);border:1px solid rgba(94,196,106,.4)}
+  .status.soon{background:rgba(245,185,66,.14);color:var(--accent);border:1px solid rgba(245,185,66,.4)}
+
+  footer{padding:30px 0;text-align:center;color:var(--muted);font-size:.85rem}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .toc a{background:var(--panel2);border:1px solid var(--edge);padding:6px 12px;border-radius:8px;font-size:.88rem}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="banner" src="img/banner.png" alt="SMP Essentials banner">
+    <p class="tagline">Een complete toolkit voor je Minecraft SMP — valuta, winkels, bank, jobs &amp; quality-of-life</p>
+    <div class="badges">
+      <span class="badge">Minecraft <b>26.1.2</b></span>
+      <span class="badge">Loader <b>Fabric</b></span>
+      <span class="badge">Vereist <b>Fabric API</b></span>
+      <span class="badge">Mod-id <b>smpessentials</b></span>
+      <span class="badge">Door <b>Sander Bloem</b></span>
+    </div>
+    <div class="toc">
+      <a href="#over">Over</a>
+      <a href="#munten">Munten</a>
+      <a href="#crafting">Crafting</a>
+      <a href="#wallet">Wallet &amp; Bank</a>
+      <a href="#verdienen">Verdienen</a>
+      <a href="#jobs">Jobs</a>
+      <a href="#auction">Veilinghuis</a>
+      <a href="#shop">Shopkeeper</a>
+      <a href="#crates">Loot Crates</a>
+      <a href="#claims">Claims</a>
+      <a href="#qol">Quality of Life</a>
+      <a href="#commands">Commando's</a>
+      <a href="#roadmap">Roadmap</a>
+    </div>
+  </div>
+</header>
+
+<section id="over"><div class="wrap">
+  <h2><span class="ico">📜</span> Over de mod</h2>
+  <p class="lead">SMP Essentials bundelt alles wat een survival-multiplayer fijn maakt: een echte economie met tastbare munten, een bank, winkel-NPC's met kist-voorraad, betaalde jobs, en de klassieke quality-of-life commando's zoals homes, warps en teleport-verzoeken.</p>
+  <div class="grid">
+    <div class="card"><div class="ci">🪙</div><h4>Valuta</h4><p>Koper/zilver/goud als items, een wallet, en een craftbaar bank-blok.</p></div>
+    <div class="card"><div class="ci">⛏️</div><h4>Jobs</h4><p>Verdien automatisch munten met minen en oogsten.</p></div>
+    <div class="card"><div class="ci">🏪</div><h4>Shops</h4><p>Winkel-NPC's met een kist als voorraad, in te stellen per shop.</p></div>
+    <div class="card"><div class="ci">🏠</div><h4>Quality of life</h4><p>Homes, warps, /spawn en teleport-verzoeken tussen spelers.</p></div>
+  </div>
+</div></section>
+
+<section id="munten"><div class="wrap">
+  <h2><span class="ico">🪙</span> De munten</h2>
+  <p>Drie denominaties met een vaste wisselkoers. Alles wordt intern in <b>koper</b> gerekend.</p>
+  <table>
+    <tr><th>Munt</th><th>Item-id</th><th>In koper</th><th>Notatie</th></tr>
+    <tr><td><span class="pill cu"></span>Koper</td><td><code>smpessentials:copper_coin</code></td><td>1</td><td><code>c</code></td></tr>
+    <tr><td><span class="pill ag"></span>Zilver</td><td><code>smpessentials:silver_coin</code></td><td>9</td><td><code>s</code></td></tr>
+    <tr><td><span class="pill au"></span>Goud</td><td><code>smpessentials:gold_coin</code></td><td>81</td><td><code>g</code></td></tr>
+  </table>
+  <div class="callout tip">💡 Bedragen tonen als <code>1g 2s 4c</code> = 1 goud + 2 zilver + 4 koper = <b>103 koper</b>. Te vinden in de creatief-tab <b>“SMP Essentials”</b>.</div>
+</div></section>
+
+<section id="crafting"><div class="wrap">
+  <h2><span class="ico">⚒️</span> Crafting &amp; wisselen</h2>
+  <p>Alle recepten zijn <b>vormloos</b> (shapeless) — de volgorde maakt niet uit.</p>
+  <h3>Munten op- en afwaarderen</h3>
+  <table>
+    <tr><th>Invoer</th><th>Resultaat</th></tr>
+    <tr><td>9× <span class="pill cu"></span>koper</td><td>1× <span class="pill ag"></span>zilver</td></tr>
+    <tr><td>9× <span class="pill ag"></span>zilver</td><td>1× <span class="pill au"></span>goud</td></tr>
+    <tr><td>1× <span class="pill ag"></span>zilver</td><td>9× <span class="pill cu"></span>koper</td></tr>
+    <tr><td>1× <span class="pill au"></span>goud</td><td>9× <span class="pill ag"></span>zilver</td></tr>
+  </table>
+  <h3>Munten "kopen" met vanilla items</h3>
+  <table>
+    <tr><th>Invoer</th><th>Resultaat</th></tr>
+    <tr><td>1× 💎 diamant</td><td>1× <span class="pill au"></span>goud (81 koper)</td></tr>
+    <tr><td>1× 💚 emerald</td><td>3× <span class="pill ag"></span>zilver (27 koper)</td></tr>
+  </table>
+  <div class="callout warn">⚠️ Diamant/emerald → munten is een eenrichtings-instroom van geld. Op een serieuze economie eventueel duurder maken of weglaten tegen inflatie.</div>
+</div></section>
+
+<section id="wallet"><div class="wrap">
+  <h2><span class="ico">👛</span> Wallet &amp; Bank <span class="status done">klaar</span></h2>
+  <p>Naast fysieke munten heeft elke speler een persoonlijke rekening (wallet).</p>
+  <table>
+    <tr><th>Commando</th><th>Wat het doet</th></tr>
+    <tr><td><code>/balance</code></td><td>Toont je saldo.</td></tr>
+    <tr><td><code>/deposit</code></td><td>Stort alle munten uit je inventory.</td></tr>
+    <tr><td><code>/withdraw &lt;bedrag&gt;</code></td><td>Neemt munten op als items (in koper).</td></tr>
+    <tr><td><code>/pay &lt;speler&gt; &lt;bedrag&gt;</code></td><td>Stuurt geld naar een andere speler.</td></tr>
+  </table>
+
+  <h3>Het Bank-blok 🏦</h3>
+  <p>Een craftbaar blok (8× ijzer rond 1× goud coin) waarmee je je wallet beheert zonder commando's.</p>
+  <div class="gui">
+    <div class="t">Bank</div>
+    <div class="w" style="color:var(--gold)">Saldo: 2g 4s 1c</div>
+    <div class="w"><span class="btn" style="padding:5px 40px">Stort alle munten</span></div>
+    <div class="w">Opnemen:</div>
+    <div class="w"><span class="btn">1 Koper</span><span class="btn">1 Zilver</span><span class="btn">1 Goud</span></div>
+  </div>
+  <ul>
+    <li><b>Rechtsklik</b> het blok → bankvenster met live saldo.</li>
+    <li><b>Stort alle munten</b> → al je munten gaan naar de wallet.</li>
+    <li><b>Opnemen</b> → haal 1 koper/zilver/goud per klik als fysieke munt.</li>
+  </ul>
+</div></section>
+
+<section id="verdienen"><div class="wrap">
+  <h2><span class="ico">⚔️</span> Geld verdienen — drops &amp; loot</h2>
+  <h3>Mob-drops</h3>
+  <p>Vijanden laten munten vallen; sterkere mobs geven meer.</p>
+  <table>
+    <tr><th>Mob</th><th>Drop (ongeveer)</th></tr>
+    <tr><td>Zombie / Husk / Spider</td><td>1–3 <span class="pill cu"></span>koper</td></tr>
+    <tr><td>Skeleton / Creeper / Pillager</td><td>2–7 <span class="pill cu"></span>koper</td></tr>
+    <tr><td>Blaze / Wither Skeleton</td><td>5–10 <span class="pill cu"></span>koper</td></tr>
+    <tr><td>Enderman / Warden / Elder Guardian</td><td>1–5 <span class="pill ag"></span>zilver</td></tr>
+    <tr><td>Wither / Ender Dragon</td><td>2–5 <span class="pill au"></span>goud</td></tr>
+  </table>
+  <h3>Loot-kisten</h3>
+  <p>Munten zitten in dungeon-, mineshaft-, stronghold-, bastion-, end city- en nether fort-kisten.</p>
+</div></section>
+
+<section id="jobs"><div class="wrap">
+  <h2><span class="ico">⛏️</span> Jobs <span class="status done">klaar</span></h2>
+  <p class="lead">Verdien automatisch munten op je wallet door te werken — beloning verschijnt in je actiebalk (<code>+ 8c (job)</code>). Werkt alleen in survival.</p>
+  <h3>Mining (per erts)</h3>
+  <table>
+    <tr><th>Erts</th><th>Beloning</th></tr>
+    <tr><td>Kool / Koper / Quartz</td><td>2c</td></tr>
+    <tr><td>IJzer / Lapis / Redstone / Nether-goud</td><td>3c</td></tr>
+    <tr><td>Goud</td><td>5c</td></tr>
+    <tr><td>Diamant</td><td>8c</td></tr>
+    <tr><td>Emerald</td><td>10c</td></tr>
+    <tr><td>Ancient Debris</td><td>25c</td></tr>
+  </table>
+  <h3>Farming</h3>
+  <p>Elk <b>rijp</b> gewas (tarwe, wortel, aardappel, biet) → <b>1c</b>. Onrijp = geen beloning (geen exploit). Bekijk alles met <code>/jobs</code>.</p>
+</div></section>
+
+<section id="auction"><div class="wrap">
+  <h2><span class="ico">🔨</span> Veilinghuis <span class="status done">klaar</span></h2>
+  <p class="lead">Een speler-tot-speler marktplaats die volledig via je wallet loopt — geen losse munten nodig, betaling gaat automatisch van koper naar verkoper.</p>
+  <table>
+    <tr><th>Commando</th><th>Wat het doet</th></tr>
+    <tr><td><code>/ah sell &lt;prijs&gt;</code></td><td>Zet het item in je hand te koop (prijs in koper).</td></tr>
+    <tr><td><code>/ah</code></td><td>Bekijk alle aanbiedingen met klikbare <b>[Koop]</b>-knoppen.</td></tr>
+    <tr><td><code>/ah buy &lt;id&gt;</code></td><td>Koop een aanbod — betaalt uit je wallet, item komt in je inventory.</td></tr>
+    <tr><td><code>/ah mine</code></td><td>Je eigen aanbiedingen, met <b>[Annuleer]</b>-knoppen.</td></tr>
+    <tr><td><code>/ah cancel &lt;id&gt;</code></td><td>Trek een aanbod terug en krijg je item terug.</td></tr>
+  </table>
+  <div class="callout tip">💸 Klik in de chat op <b>[Koop]</b> om direct te kopen. De verkoper krijgt het geld op de wallet en wordt op de hoogte gebracht als hij online is. Aanbiedingen overleven herstarts.</div>
+</div></section>
+
+<section id="shop"><div class="wrap">
+  <h2><span class="ico">🏪</span> De Shopkeeper <span class="status done">klaar</span></h2>
+  <p class="lead">Een instelbare winkel-NPC, perfect voor een shopping district waar elke speler z'n eigen shop runt.</p>
+
+  <h3>Plaatsen</h3>
+  <ol class="steps">
+    <li>Zet een <b>kist</b> neer — dit wordt de voorraad van je winkel.</li>
+    <li>Kijk naar de <b>bovenkant van de kist</b> en typ <code>/shopkeeper spawn</code>. De NPC verschijnt waar je kijkt.</li>
+    <li>De shopkeeper <b>kijkt je altijd aan</b>, is <b>onsterfelijk</b> en blijft staan.</li>
+  </ol>
+
+  <h3>Beheren — admin-venster</h3>
+  <p><b>Shift + rechtsklik</b> (als eigenaar of OP):</p>
+  <div class="gui">
+    <div class="t">Shop beheer</div>
+    <div class="w">Artikelen (✖ = verwijder)</div>
+    <div class="slots"><span class="slot">🍞</span><span class="slot">💎</span><span class="slot"></span></div>
+    <div class="w"><span class="btn">✖</span><span class="btn">✖</span></div>
+    <div class="w">Nieuw — sjabloon komt terug</div>
+    <div class="slots"><span class="slot">📦</span><span class="btn" style="padding:6px 22px">Toevoegen →</span></div>
+    <div class="w" style="color:var(--gold)">Prijs: 1s 0c</div>
+    <div class="w"><span class="btn">Koper</span><span class="btn">Zilver</span><span class="btn">Goud</span><span class="btn">Reset</span></div>
+  </div>
+  <ul>
+    <li><b>Sjabloon-item</b> in het slot bepaalt wát je verkoopt — je krijgt het terug.</li>
+    <li>Prijs opbouwen met de <b>munt-knoppen</b> (Koper +1, Zilver +9, Goud +81).</li>
+    <li>Leg een stack van 64 als sjabloon → verkoopt 64 per koop.</li>
+  </ul>
+
+  <h3>Kopen &amp; voorraad</h3>
+  <p><b>Rechtsklik</b> opent het handelsscherm; <b>shift-klik</b> = meerdere kopen.</p>
+  <div class="callout tip">📦 De winkel verkoopt alleen wat in de kist eronder ligt. Verkopen gaan <b>uit de kist</b>, betalingen <b>in de kist</b>. Leeg = uitverkocht.</div>
+</div></section>
+
+<section id="crates"><div class="wrap">
+  <h2><span class="ico">🎁</span> Loot Crates <span class="status done">klaar</span></h2>
+  <p class="lead">Een schatkist die je met een sleutel opent voor willekeurige beloningen — gokken met je verdiende goud.</p>
+  <ul>
+    <li><b>Loot Crate</b> 🎁 — craft: 8× goud coin rond een kist.</li>
+    <li><b>Crate Key</b> 🔑 — craft: 1× goud coin + 2× ijzer.</li>
+    <li><b>Rechtsklik met een sleutel</b> → sleutel verbruikt, je krijgt 2 willekeurige beloningen + geluid + melding.</li>
+  </ul>
+  <table>
+    <tr><th>Kans</th><th>Beloning</th></tr>
+    <tr><td>35%</td><td>1–2 <span class="pill au"></span>goud coin</td></tr>
+    <tr><td>25%</td><td>2–5 <span class="pill ag"></span>zilver coin</td></tr>
+    <tr><td>15%</td><td>1–3 diamant</td></tr>
+    <tr><td>13%</td><td>4–12 ijzer</td></tr>
+    <tr><td>7%</td><td>1–3 emerald</td></tr>
+    <tr><td>~4%</td><td>5–9 goud coin (jackpot)</td></tr>
+    <tr><td>1%</td><td>netherite scrap 💎</td></tr>
+  </table>
+</div></section>
+
+<section id="claims"><div class="wrap">
+  <h2><span class="ico">🏡</span> Land &amp; Claims <span class="status done">klaar</span></h2>
+  <p class="lead">Bescherm je gebied tegen grief — per chunk, met trust voor vrienden.</p>
+  <table>
+    <tr><th>Commando</th><th>Wat het doet</th></tr>
+    <tr><td><code>/claim</code></td><td>Claim de chunk waar je in staat (16×16).</td></tr>
+    <tr><td><code>/unclaim</code></td><td>Geef je claim weer vrij.</td></tr>
+    <tr><td><code>/claims</code></td><td>Tel je geclaimde chunks.</td></tr>
+    <tr><td><code>/claim show</code></td><td>Toon gekleurde chunk-randen in de wereld (toggle).</td></tr>
+    <tr><td><code>/trust &lt;speler&gt;</code></td><td>Geef een vriend bouwrechten in al je claims.</td></tr>
+    <tr><td><code>/untrust &lt;speler&gt;</code></td><td>Neem die rechten weer af.</td></tr>
+  </table>
+  <div class="callout tip">🛡️ In een geclaimde chunk kunnen anderen niet breken, plaatsen of kisten/deuren openen. Met <code>/claim show</code> zie je <span style="color:#44dd55">groene</span> randen om jouw claims en <span style="color:#dd4444">rode</span> om die van anderen — werkt met élke map-mod (Xaero included).</div>
+</div></section>
+
+<section id="qol"><div class="wrap">
+  <h2><span class="ico">🧭</span> Quality of Life <span class="status done">klaar</span></h2>
+  <div class="grid">
+    <div class="card"><div class="ci">🏠</div><h4>Homes</h4><p>Meerdere homes met namen + tab-aanvulling. <code>/sethome</code>, <code>/home</code>, <code>/delhome</code>, <code>/homes</code>.</p></div>
+    <div class="card"><div class="ci">🌐</div><h4>Warps</h4><p>Server-brede teleportpunten (OP zet ze). <code>/warp</code>, <code>/setwarp</code>, <code>/delwarp</code>, <code>/warps</code>.</p></div>
+    <div class="card"><div class="ci">🏁</div><h4>Spawn</h4><p>Snel terug naar de wereld-spawn met <code>/spawn</code>.</p></div>
+    <div class="card"><div class="ci">🤝</div><h4>TPA</h4><p>Teleport-verzoeken tussen spelers. <code>/tpa</code>, <code>/tpahere</code>, <code>/tpaccept</code>, <code>/tpdeny</code>.</p></div>
+  </div>
+  <div class="callout tip">✨ Homes en warps overleven herstarts en werken cross-dimensie (overworld/nether/end), inclusief kijkrichting. Typ <code>/home </code> + Tab voor je opgeslagen homes.</div>
+</div></section>
+
+<section id="commands"><div class="wrap">
+  <h2><span class="ico">⌨️</span> Alle commando's</h2>
+  <table>
+    <tr><th>Categorie</th><th>Commando</th><th>Functie</th></tr>
+    <tr><td rowspan="4">Wallet</td><td><code>/balance</code></td><td>Toon saldo.</td></tr>
+    <tr><td><code>/deposit</code></td><td>Stort al je munten.</td></tr>
+    <tr><td><code>/withdraw &lt;bedrag&gt;</code></td><td>Neem munten op.</td></tr>
+    <tr><td><code>/pay &lt;speler&gt; &lt;bedrag&gt;</code></td><td>Betaal een speler.</td></tr>
+    <tr><td>Jobs</td><td><code>/jobs</code></td><td>Toon job-tarieven.</td></tr>
+    <tr><td rowspan="5">Shop</td><td><code>/shopkeeper spawn</code></td><td>Plaats winkel op aangekeken blok.</td></tr>
+    <tr><td><code>/shopkeeper addtrade &lt;prijs&gt;</code></td><td>Artikel toevoegen (chat-variant).</td></tr>
+    <tr><td><code>/shopkeeper removetrade &lt;index&gt;</code></td><td>Artikel verwijderen.</td></tr>
+    <tr><td><code>/shopkeeper setname &lt;naam&gt;</code></td><td>Winkel een naam geven.</td></tr>
+    <tr><td><code>/shopkeeper remove</code></td><td>Winkel verwijderen.</td></tr>
+    <tr><td rowspan="4">Homes</td><td><code>/sethome [naam]</code></td><td>Home opslaan.</td></tr>
+    <tr><td><code>/home [naam]</code></td><td>Naar home teleporteren.</td></tr>
+    <tr><td><code>/delhome [naam]</code></td><td>Home verwijderen.</td></tr>
+    <tr><td><code>/homes</code></td><td>Lijst je homes.</td></tr>
+    <tr><td rowspan="4">Warps</td><td><code>/warp &lt;naam&gt;</code></td><td>Naar warp teleporteren.</td></tr>
+    <tr><td><code>/warps</code></td><td>Lijst alle warps.</td></tr>
+    <tr><td><code>/setwarp &lt;naam&gt;</code> <span class="badge">OP</span></td><td>Warp zetten.</td></tr>
+    <tr><td><code>/delwarp &lt;naam&gt;</code> <span class="badge">OP</span></td><td>Warp verwijderen.</td></tr>
+    <tr><td rowspan="5">Teleport</td><td><code>/spawn</code></td><td>Naar wereld-spawn.</td></tr>
+    <tr><td><code>/tpa &lt;speler&gt;</code></td><td>Vraag naar iemand te teleporteren.</td></tr>
+    <tr><td><code>/tpahere &lt;speler&gt;</code></td><td>Vraag of iemand naar jou komt.</td></tr>
+    <tr><td><code>/tpaccept</code></td><td>Verzoek accepteren.</td></tr>
+    <tr><td><code>/tpdeny</code></td><td>Verzoek weigeren.</td></tr>
+    <tr><td rowspan="5">Veiling</td><td><code>/ah</code></td><td>Bekijk de marktplaats.</td></tr>
+    <tr><td><code>/ah sell &lt;prijs&gt;</code></td><td>Item in hand te koop zetten.</td></tr>
+    <tr><td><code>/ah buy &lt;id&gt;</code></td><td>Een aanbod kopen.</td></tr>
+    <tr><td><code>/ah mine</code></td><td>Je eigen aanbiedingen.</td></tr>
+    <tr><td><code>/ah cancel &lt;id&gt;</code></td><td>Aanbod terugtrekken.</td></tr>
+    <tr><td rowspan="6">Claims</td><td><code>/claim</code></td><td>Chunk claimen.</td></tr>
+    <tr><td><code>/unclaim</code></td><td>Claim vrijgeven.</td></tr>
+    <tr><td><code>/claims</code></td><td>Aantal claims.</td></tr>
+    <tr><td><code>/claim show</code></td><td>Chunk-randen tonen (toggle).</td></tr>
+    <tr><td><code>/trust &lt;speler&gt;</code></td><td>Vriend bouwrechten geven.</td></tr>
+    <tr><td><code>/untrust &lt;speler&gt;</code></td><td>Rechten afnemen.</td></tr>
+    <tr><td>Crates</td><td>(rechtsklik met sleutel)</td><td>Loot crate openen.</td></tr>
+  </table>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <h2><span class="ico">🗺️</span> Roadmap</h2>
+  <div class="grid">
+    <div class="card"><div class="ci">💰</div><h4>Economie <span class="status done">grotendeels</span></h4><p>Munten, wallet, bank, jobs, shops &amp; veilinghuis ✓. Mogelijk nog: koop-én-verkoop-shops.</p></div>
+    <div class="card"><div class="ci">🏡</div><h4>Land &amp; claims <span class="status done">klaar</span></h4><p>Claimen, bescherming, trust &amp; chunk-randen ✓. Mogelijk nog: kosten/limiet via munten.</p></div>
+    <div class="card"><div class="ci">🧭</div><h4>Quality of life <span class="status done">deels</span></h4><p>Homes, warps, spawn, tpa ✓. Mogelijk: /back &amp; death-chest.</p></div>
+    <div class="card"><div class="ci">🎉</div><h4>Events <span class="status done">deels</span></h4><p>Loot-crates ✓. Mogelijk nog: bounties, NPC-quests, server-events.</p></div>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <p><b>SMP Essentials</b> v1.0.0 — gemaakt door Sander Bloem · Fabric mod voor Minecraft 26.1.2</p>
+    <p style="opacity:.6">Lokale wiki/overzicht van de mod.</p>
+  </div>
+</footer>
+
+</body>
+</html>

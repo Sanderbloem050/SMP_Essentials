@@ -1,0 +1,46 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.15.5'
+    id 'java'
+}
+
+version = project.mod_version
+group = project.mod_group_id
+
+base {
+    archivesName = "smpessentials"
+}
+
+repositories {
+    maven { url = "https://maven.fabricmc.net/" }
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/smpessentials.accesswidener")
+    mods {
+        "smpessentials" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 25
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+jar {
+    from("LICENSE") { rename { "${it}_${project.base.archivesName.get()}" } }
+}

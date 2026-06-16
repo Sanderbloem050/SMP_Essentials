@@ -1,0 +1,6 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "misc",
+    "ingredients": [ "minecraft:diamond" ],
+    "result": { "id": "smpessentials:gold_coin", "count": 1 }
+}

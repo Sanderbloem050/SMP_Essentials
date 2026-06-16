@@ -1,0 +1,22 @@
+{
+    "item.smpessentials.copper_coin": "Copper Coin",
+    "item.smpessentials.silver_coin": "Silver Coin",
+    "item.smpessentials.gold_coin": "Gold Coin",
+    "item.smpessentials.crate_key": "Crate Key",
+    "block.smpessentials.atm": "Bank (ATM)",
+    "block.smpessentials.loot_crate": "Loot Crate",
+    "itemGroup.smpessentials.tab": "SMP Essentials",
+
+    "smpessentials.balance": "Balance: %s",
+    "smpessentials.pay.success": "Sent %s to %s",
+    "smpessentials.pay.received": "%s sent you %s",
+    "smpessentials.pay.insufficient": "Insufficient balance. You have %s",
+    "smpessentials.pay.self": "You cannot pay yourself",
+    "smpessentials.deposit.none": "No coins in inventory to deposit",
+    "smpessentials.deposit.success": "Deposited %s to your wallet",
+    "smpessentials.withdraw.success": "Withdrew %s from your wallet",
+    "smpessentials.withdraw.insufficient": "Insufficient balance to withdraw %s",
+    "smpessentials.format.gold": "%dg",
+    "smpessentials.format.silver": "%ds",
+    "smpessentials.format.copper": "%dc"
+}
