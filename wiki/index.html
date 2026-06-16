@@ -337,13 +337,22 @@
   <p class="lead">Een quest-NPC die items inneemt in ruil voor een beloning op je wallet.</p>
   <h3>Plaatsen &amp; inrichten</h3>
   <ol class="steps">
-    <li>Kijk naar een blok en typ <code>/questgiver spawn</code> — de NPC verschijnt daar (groenig getinte skin, herkenbaar t.o.v. de shopkeeper).</li>
+    <li>Kijk naar een blok en typ <code>/questgiver spawn</code> — de NPC verschijnt daar met een eigen handgemaakte skin.</li>
     <li>Houd het vereiste item vast: <code>/questgiver setitem &lt;aantal&gt;</code>.</li>
     <li>Stel de beloning in: <code>/questgiver setreward &lt;bedrag&gt;</code>.</li>
     <li>Optioneel: <code>/questgiver toggleonce</code> — quest maar één keer per speler beschikbaar.</li>
   </ol>
   <h3>Inleveren</h3>
   <p><b>Rechtsklik</b> de NPC: heb je genoeg van het item, dan wordt het ingenomen en de beloning op je wallet gestort (met geluid + groene partikels). Te weinig? Je ziet precies hoeveel je nog mist. <b>Shift+rechtsklik</b> (eigenaar/OP) toont de huidige instellingen.</p>
+
+  <h3>Quest Seeker — een verstopte schatzoeker 🗺️</h3>
+  <p>Een speciale event-NPC die je ergens random in de wereld verstopt, met zijn eigen gele schatzoeker-skin.</p>
+  <table>
+    <tr><th>Commando</th><th>Wat het doet</th></tr>
+    <tr><td><code>/questseeker spawn &lt;straal&gt; &lt;beloning&gt;</code> <span class="badge">OP</span></td><td>Verstopt de Seeker willekeurig binnen &lt;straal&gt; blokken van de wereld-spawn, op het oppervlak.</td></tr>
+    <tr><td><code>/questseeker remove</code> <span class="badge">OP</span></td><td>Verwijdert de actieve Seeker.</td></tr>
+  </table>
+  <div class="callout tip">🏆 Geen hints — pure ontdekking. Elke speler die hem vindt (rechtsklik) claimt de beloning <b>eenmalig voor zichzelf</b>. De allereerste vinder krijgt een server-brede aankondiging; daarna kan iedereen nog gewoon zijn eigen beloning incasseren.</div>
 </div></section>
 
 <section id="admin"><div class="wrap">
@@ -417,6 +426,8 @@
     <tr><td><code>/questgiver setreward &lt;bedrag&gt;</code></td><td>Beloning instellen.</td></tr>
     <tr><td><code>/questgiver toggleonce</code></td><td>Eenmalig per speler aan/uit.</td></tr>
     <tr><td><code>/questgiver remove</code></td><td>Quest-NPC verwijderen.</td></tr>
+    <tr><td rowspan="2">Quest Seeker</td><td><code>/questseeker spawn &lt;straal&gt; &lt;beloning&gt;</code> <span class="badge">OP</span></td><td>Schatzoeker verstoppen.</td></tr>
+    <tr><td><code>/questseeker remove</code> <span class="badge">OP</span></td><td>Actieve Seeker verwijderen.</td></tr>
     <tr><td>Admin</td><td><code>/smpadmin</code> <span class="badge">OP</span></td><td>Server-instellingenvenster openen.</td></tr>
   </table>
 </div></section>

@@ -26,6 +26,7 @@ public class CurrencyMod implements ModInitializer {
         ModEntities.register();
         FabricDefaultAttributeRegistry.register(ModEntities.SHOPKEEPER, Mob.createMobAttributes());
         FabricDefaultAttributeRegistry.register(ModEntities.QUEST_GIVER, Mob.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(ModEntities.QUEST_SEEKER, Mob.createMobAttributes());
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             WalletCommand.register(dispatcher);
@@ -36,6 +37,7 @@ public class CurrencyMod implements ModInitializer {
             com.sanderbloem.currencymod.commands.AuctionCommands.register(dispatcher);
             com.sanderbloem.currencymod.commands.BountyCommands.register(dispatcher);
             com.sanderbloem.currencymod.commands.QuestGiverCommand.register(dispatcher);
+            com.sanderbloem.currencymod.commands.QuestSeekerCommand.register(dispatcher);
             com.sanderbloem.currencymod.commands.AdminCommand.register(dispatcher);
         });
 

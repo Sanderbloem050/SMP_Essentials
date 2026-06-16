@@ -32,6 +32,7 @@
 | 🧭 **Quality of Life** | Homes, warps, `/spawn`, teleport-verzoeken (`/tpa`), `/back` en death-chests |
 | 🎯 **Bounties** | Zet een prijs op iemands hoofd, win 'm terug in PvP |
 | 📜 **NPC-Quests** | Quest-NPC's die items innemen voor een beloning op je wallet |
+| 🗺️ **Quest Seeker** | Een schatzoeker-NPC die ergens random in de wereld verstopt wordt — wie hem vindt incasseert |
 | ⚙️ **Server-instellingen** | GUI-venster voor OP's om mod-onderdelen aan/uit te zetten (`/smpadmin`) |
 
 ## 🚀 Installatie
@@ -109,6 +110,7 @@ src/main/java/com/sanderbloem/currencymod/
 
 **Quests**
 - `/questgiver spawn|setitem|setreward|toggleonce|remove`
+- `/questseeker spawn <straal> <beloning>`, `/questseeker remove` (OP)
 
 **Admin**
 - `/smpadmin` — server-instellingenvenster (OP)
