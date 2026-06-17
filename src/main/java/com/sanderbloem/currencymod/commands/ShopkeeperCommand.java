@@ -62,7 +62,7 @@ public class ShopkeeperCommand {
                                         ctx.getSource().sendFailure(Component.literal("Houd het item vast dat je wilt verkopen."));
                                         return 0;
                                     }
-                                    npc.addTrade(new ShopTrade(hand, price));
+                                    npc.addTrade(new ShopTrade(hand, price, com.sanderbloem.currencymod.entity.ShopTradeMode.SELL_TO_PLAYER));
                                     ctx.getSource().sendSuccess(() -> Component.literal(
                                             "§aArtikel toegevoegd: §f" + hand.getHoverName().getString() +
                                                     " §avoor §e" + WalletData.formatBalance(price)), false);

@@ -23,8 +23,17 @@ public class ModItemGroups {
                     output.accept(ModItems.SILVER_COIN);
                     output.accept(ModItems.GOLD_COIN);
                     output.accept(ModItems.CRATE_KEY);
+                    output.accept(ModItems.BRONZE_KEY);
+                    output.accept(ModItems.SILVER_KEY);
+                    output.accept(ModItems.GOLD_KEY);
                     output.accept(ModBlocks.ATM);
+                    output.accept(ModBlocks.BOUNTY_BOARD);
                     output.accept(ModBlocks.LOOT_CRATE);
+                    output.accept(ModBlocks.BRONZE_CRATE);
+                    output.accept(ModBlocks.SILVER_CRATE);
+                    output.accept(ModBlocks.GOLD_CRATE);
+                    output.accept(ModBlocks.AUCTION_TERMINAL);
+                    output.accept(ModBlocks.QUEST_BOARD);
                 })
                 .build();
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,

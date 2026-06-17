@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["###", "# #", "###"],
+  "key": { "#": "minecraft:oak_planks" },
+  "result": { "id": "smpessentials:bronze_crate", "count": 1 }
+}

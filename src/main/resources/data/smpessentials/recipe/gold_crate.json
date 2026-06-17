@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["###", "# #", "###"],
+  "key": { "#": "minecraft:gold_ingot" },
+  "result": { "id": "smpessentials:gold_crate", "count": 1 }
+}

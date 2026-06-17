@@ -30,9 +30,9 @@ import java.util.UUID;
 
 public class ShopkeeperEntity extends PathfinderMob implements Merchant {
 
-    private static final int UNLIMITED_USES = 999_999;
-
     private final List<ShopTrade> trades = new ArrayList<>();
+    /** Parallel aan de MerchantOffers — bijgehouden per buildOffers(). */
+    private final List<ShopTrade> offerIndex = new ArrayList<>();
     private UUID ownerUUID = null;
 
     private Player tradingPlayer = null;
@@ -45,25 +45,15 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
         this.setInvulnerable(true);
     }
 
-    @Override
-    protected void registerGoals() {}
+    @Override protected void registerGoals() {}
 
     @Override
-    public boolean isInvulnerableTo(net.minecraft.server.level.ServerLevel level,
-                                    net.minecraft.world.damagesource.DamageSource source) {
-        return true; // shopkeeper kan niet dood
-    }
+    public boolean isInvulnerableTo(ServerLevel level, net.minecraft.world.damagesource.DamageSource source) { return true; }
 
     @Override
-    public boolean hurtServer(net.minecraft.server.level.ServerLevel level,
-                              net.minecraft.world.damagesource.DamageSource source, float amount) {
-        return false; // geen schade
-    }
+    public boolean hurtServer(ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float amount) { return false; }
 
-    @Override
-    public boolean isPushable() {
-        return false; // blijft staan
-    }
+    @Override public boolean isPushable() { return false; }
 
     @Override
     public void tick() {
@@ -78,12 +68,8 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
         double dx = p.getX() - this.getX();
         double dz = p.getZ() - this.getZ();
         float yaw = (float) (net.minecraft.util.Mth.atan2(dz, dx) * net.minecraft.util.Mth.RAD_TO_DEG) - 90.0f;
-        this.setYRot(yaw);
-        this.setYBodyRot(yaw);
-        this.setYHeadRot(yaw);
-        this.yRotO = yaw;
-        this.yBodyRotO = yaw;
-        this.yHeadRotO = yaw;
+        this.setYRot(yaw); this.setYBodyRot(yaw); this.setYHeadRot(yaw);
+        this.yRotO = yaw; this.yBodyRotO = yaw; this.yHeadRotO = yaw;
     }
 
     @Override
@@ -102,7 +88,7 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
             } else {
                 player.sendSystemMessage(Component.literal("§cDeze winkel heeft nog geen artikelen."));
                 if (isOwnerOrOp) {
-                    player.sendSystemMessage(Component.literal("§7Gebruik /shopkeeper addtrade <prijs>"));
+                    player.sendSystemMessage(Component.literal("§7Shift+klik om te beheren."));
                 }
             }
         }
@@ -113,22 +99,6 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
         player.openMenu(new net.minecraft.world.SimpleMenuProvider(
                 (id, inv, p) -> new com.sanderbloem.currencymod.menu.AdminShopMenu(id, inv, this),
                 Component.literal("Beheer: " + getDisplayName().getString())));
-    }
-
-    private void sendTradeList(ServerPlayer player) {
-        player.sendSystemMessage(Component.literal("§6=== Beheer: " + getDisplayName().getString() + " ==="));
-        if (trades.isEmpty()) {
-            player.sendSystemMessage(Component.literal("§7Geen artikelen."));
-        } else {
-            for (int i = 0; i < trades.size(); i++) {
-                ShopTrade t = trades.get(i);
-                player.sendSystemMessage(Component.literal(
-                        "§f[" + i + "] §e" + t.getItem().getHoverName().getString() +
-                                " §7— §a" + WalletData.formatBalance(t.getPrice())
-                ));
-            }
-        }
-        player.sendSystemMessage(Component.literal("§7/shopkeeper addtrade <prijs> | removetrade <index> | setname <naam>"));
     }
 
     public List<ShopTrade> getTrades() { return List.copyOf(trades); }
@@ -142,9 +112,8 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
     public UUID getOwnerUUID() { return ownerUUID; }
     public void setOwnerUUID(UUID uuid) { this.ownerUUID = uuid; }
 
-    // ===== Merchant implementatie =====
+    // ===== Container helpers =====
 
-    /** De kist waarop de shopkeeper staat = de voorraad. Null als er geen is. */
     public Container getStockContainer() {
         if (level().isClientSide()) return null;
         Container c = HopperBlockEntity.getContainerAt(level(), getOnPos());
@@ -177,48 +146,83 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
     private void depositToContainer(Container c, ItemStack stack) {
         if (stack.isEmpty()) return;
         ItemStack rem = stack.copy();
-        // samenvoegen in bestaande stacks
         for (int i = 0; i < c.getContainerSize() && !rem.isEmpty(); i++) {
             ItemStack s = c.getItem(i);
             if (!s.isEmpty() && ItemStack.isSameItemSameComponents(s, rem)) {
-                int max = Math.min(c.getMaxStackSize(s), s.getMaxStackSize());
-                int can = max - s.getCount();
+                int can = Math.min(c.getMaxStackSize(s), s.getMaxStackSize()) - s.getCount();
                 if (can > 0) {
                     int move = Math.min(can, rem.getCount());
-                    s.grow(move);
-                    rem.shrink(move);
+                    s.grow(move); rem.shrink(move);
                     c.setItem(i, s);
                 }
             }
         }
-        // lege slots vullen
         for (int i = 0; i < c.getContainerSize() && !rem.isEmpty(); i++) {
             if (c.getItem(i).isEmpty()) {
                 int move = Math.min(c.getMaxStackSize(rem), rem.getCount());
-                ItemStack put = rem.copy();
-                put.setCount(move);
-                c.setItem(i, put);
-                rem.shrink(move);
+                ItemStack put = rem.copy(); put.setCount(move);
+                c.setItem(i, put); rem.shrink(move);
             }
         }
         c.setChanged();
-        // overschot valt naast de shopkeeper
-        if (!rem.isEmpty() && level() instanceof ServerLevel sl) {
-            this.spawnAtLocation(sl, rem);
+        if (!rem.isEmpty() && level() instanceof ServerLevel sl) this.spawnAtLocation(sl, rem);
+    }
+
+    private static boolean containerHasSpace(Container c, ItemStack stack) {
+        int need = stack.getCount();
+        for (int i = 0; i < c.getContainerSize(); i++) {
+            ItemStack s = c.getItem(i);
+            if (s.isEmpty()) return true;
+            if (ItemStack.isSameItemSameComponents(s, stack)) {
+                int can = Math.min(c.getMaxStackSize(s), stack.getMaxStackSize()) - s.getCount();
+                need -= can;
+                if (need <= 0) return true;
+            }
+        }
+        return false;
+    }
+
+    private static int countInPlayerInv(Player p, ItemStack ref) {
+        int total = 0;
+        for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
+            ItemStack s = p.getInventory().getItem(i);
+            if (!s.isEmpty() && ItemStack.isSameItemSameComponents(s, ref)) total += s.getCount();
+        }
+        return total;
+    }
+
+    private static void removeFromPlayerInv(Player p, ItemStack ref, int amount) {
+        int remaining = amount;
+        for (int i = 0; i < p.getInventory().getContainerSize() && remaining > 0; i++) {
+            ItemStack s = p.getInventory().getItem(i);
+            if (!s.isEmpty() && ItemStack.isSameItemSameComponents(s, ref)) {
+                int take = Math.min(s.getCount(), remaining);
+                s.shrink(take);
+                remaining -= take;
+            }
         }
     }
+
+    // ===== Merchant offers =====
 
     private MerchantOffers buildOffers() {
         Container stock = getStockContainer();
         MerchantOffers result = new MerchantOffers();
+        offerIndex.clear();
+
         for (ShopTrade t : trades) {
-            result.add(toOffer(t, stock));
+            if (t.getMode() == ShopTradeMode.BUY_FROM_PLAYER) {
+                result.add(toBuyOffer(t, stock));
+            } else {
+                result.add(toSellOffer(t, stock));
+            }
+            offerIndex.add(t);
         }
         return result;
     }
 
-    /** Zet een koperprijs om in maximaal twee munt-kostenslots (gold/silver/copper). */
-    private MerchantOffer toOffer(ShopTrade trade, Container stock) {
+    /** SELL: speler betaalt munten, krijgt item. Standaard gedrag. */
+    private MerchantOffer toSellOffer(ShopTrade trade, Container stock) {
         long price = Math.max(1, trade.getPrice());
         int gold = (int) Math.min(64, price / WalletData.GOLD_VALUE);
         long rem = price - (long) gold * WalletData.GOLD_VALUE;
@@ -228,13 +232,9 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
 
         if (gold > 0) {
             costA = new ItemCost(ModItems.GOLD_COIN, gold);
-            if (rem <= 0) {
-                costB = Optional.empty();
-            } else if (rem <= 64) {
-                costB = Optional.of(new ItemCost(ModItems.COPPER_COIN, (int) rem));
-            } else {
-                costB = Optional.of(new ItemCost(ModItems.SILVER_COIN, (int) Math.round(rem / (double) WalletData.SILVER_VALUE)));
-            }
+            costB = rem <= 0 ? Optional.empty()
+                    : rem <= 64 ? Optional.of(new ItemCost(ModItems.COPPER_COIN, (int) rem))
+                    : Optional.of(new ItemCost(ModItems.SILVER_COIN, (int) Math.round(rem / (double) WalletData.SILVER_VALUE)));
         } else {
             int silver = (int) (price / WalletData.SILVER_VALUE);
             int copper = (int) (price % WalletData.SILVER_VALUE);
@@ -250,21 +250,54 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
             }
         }
 
-        // Voorraad uit de kist bepaalt hoeveel keer dit artikel gekocht kan worden
         ItemStack result = trade.getItem();
         int bundle = Math.max(1, result.getCount());
-        int maxUses = 0;
-        if (stock != null) {
-            maxUses = countInContainer(stock, result) / bundle;
-        }
+        int maxUses = stock != null ? countInContainer(stock, result) / bundle : 0;
         return new MerchantOffer(costA, costB, result, 0, maxUses, 0, 0.0f);
     }
 
-    @Override
-    public void setTradingPlayer(Player player) { this.tradingPlayer = player; }
+    /**
+     * BUY: speler geeft item, krijgt munten (fysiek) + owner wallet wordt gedebiteerd.
+     * costA = het item, result = muntwissel voor de prijs.
+     * maxUses = hoeveel keer de eigenaar dit kan betalen EN er plek is in de kist.
+     */
+    private MerchantOffer toBuyOffer(ShopTrade trade, Container stock) {
+        long price = Math.max(1, trade.getPrice());
+        ItemStack itemToBuy = trade.getItem();
 
-    @Override
-    public Player getTradingPlayer() { return tradingPlayer; }
+        // result: grootste denominatie die in één slot past
+        ItemStack resultCoins = priceToCoins(price);
+
+        // maxUses: begrensd door eigenaar-wallet en kistplek
+        int maxUsesByWallet = Integer.MAX_VALUE;
+        if (ownerUUID != null && level() instanceof ServerLevel sl) {
+            long ownerBal = WalletData.get(sl.getServer()).getBalance(ownerUUID);
+            maxUsesByWallet = (int) Math.min(999, ownerBal / price);
+        }
+        int maxUsesBySpace = (stock != null && containerHasSpace(stock, itemToBuy)) ? 999 : 0;
+        int maxUses = Math.min(maxUsesByWallet, maxUsesBySpace);
+
+        ItemCost costA = new ItemCost(itemToBuy.getItem(), Math.max(1, itemToBuy.getCount()));
+        return new MerchantOffer(costA, Optional.empty(), resultCoins, 0, maxUses, 0, 0.0f);
+    }
+
+    /** Zet een koperen prijs om in de grootste munt die in één slot past (max 64). */
+    private static ItemStack priceToCoins(long price) {
+        if (price >= WalletData.GOLD_VALUE) {
+            int gold = (int) Math.min(64, price / WalletData.GOLD_VALUE);
+            return new ItemStack(ModItems.GOLD_COIN, gold);
+        } else if (price >= WalletData.SILVER_VALUE) {
+            int silver = (int) Math.min(64, price / WalletData.SILVER_VALUE);
+            return new ItemStack(ModItems.SILVER_COIN, silver);
+        } else {
+            return new ItemStack(ModItems.COPPER_COIN, (int) Math.min(64, price));
+        }
+    }
+
+    // ===== Merchant callbacks =====
+
+    @Override public void setTradingPlayer(Player player) { this.tradingPlayer = player; }
+    @Override public Player getTradingPlayer() { return tradingPlayer; }
 
     @Override
     public MerchantOffers getOffers() {
@@ -272,41 +305,50 @@ public class ShopkeeperEntity extends PathfinderMob implements Merchant {
         return this.offers;
     }
 
-    @Override
-    public void overrideOffers(MerchantOffers newOffers) { this.offers = newOffers; }
+    @Override public void overrideOffers(MerchantOffers o) { this.offers = o; }
 
     @Override
     public void notifyTrade(MerchantOffer offer) {
         offer.increaseUses();
+
+        // zoek de bijbehorende ShopTrade op basis van positie in de offers-lijst
+        MerchantOffers all = getOffers();
+        int idx = -1;
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i) == offer) { idx = i; break; }
+        }
+        ShopTrade source = (idx >= 0 && idx < offerIndex.size()) ? offerIndex.get(idx) : null;
+
         Container stock = getStockContainer();
-        if (stock != null) {
-            // verkochte waar uit de kist halen
-            ItemStack result = offer.getResult();
-            removeFromContainer(stock, result, result.getCount());
-            // betaalde munten in de kist stoppen
-            depositToContainer(stock, offer.getCostA().copy());
-            ItemStack costB = offer.getCostB();
-            if (!costB.isEmpty()) depositToContainer(stock, costB.copy());
+
+        if (source != null && source.getMode() == ShopTradeMode.BUY_FROM_PLAYER) {
+            // BUY: item is al door vanilla afgenomen van de speler, munt is al gegeven
+            // Wij: item in kist deponeren + eigenaar-wallet debiteren
+            if (stock != null) {
+                depositToContainer(stock, source.getItem());
+            }
+            if (ownerUUID != null && level() instanceof ServerLevel sl) {
+                WalletData.get(sl.getServer()).subtractBalance(ownerUUID, source.getPrice());
+            }
+            // Ververs offers zodat maxUses wordt bijgewerkt
+            this.offers = null;
+        } else {
+            // SELL: standaard gedrag
+            if (stock != null) {
+                removeFromContainer(stock, offer.getResult(), offer.getResult().getCount());
+                depositToContainer(stock, offer.getCostA().copy());
+                ItemStack costB = offer.getCostB();
+                if (!costB.isEmpty()) depositToContainer(stock, costB.copy());
+            }
         }
     }
 
-    @Override
-    public void notifyTradeUpdated(ItemStack stack) {}
-
-    @Override
-    public int getVillagerXp() { return 0; }
-
-    @Override
-    public void overrideXp(int xp) {}
-
-    @Override
-    public boolean showProgressBar() { return false; }
-
-    @Override
-    public SoundEvent getNotifyTradeSound() { return SoundEvents.VILLAGER_YES; }
-
-    @Override
-    public boolean isClientSide() { return level().isClientSide(); }
+    @Override public void notifyTradeUpdated(ItemStack stack) {}
+    @Override public int getVillagerXp() { return 0; }
+    @Override public void overrideXp(int xp) {}
+    @Override public boolean showProgressBar() { return false; }
+    @Override public SoundEvent getNotifyTradeSound() { return SoundEvents.VILLAGER_YES; }
+    @Override public boolean isClientSide() { return level().isClientSide(); }
 
     @Override
     public boolean stillValid(Player player) {

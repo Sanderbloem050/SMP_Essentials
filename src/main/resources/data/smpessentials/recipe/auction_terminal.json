@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "GGG", "ICI", "GGG" ],
+  "key": { "G": "smpessentials:gold_coin", "I": "minecraft:iron_ingot", "C": "minecraft:lectern" },
+  "result": { "id": "smpessentials:auction_terminal", "count": 1 }
+}

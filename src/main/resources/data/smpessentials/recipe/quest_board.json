@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "PPP", "PGP", "PPP" ],
+  "key": { "P": "minecraft:oak_planks", "G": "smpessentials:gold_coin" },
+  "result": { "id": "smpessentials:quest_board", "count": 1 }
+}

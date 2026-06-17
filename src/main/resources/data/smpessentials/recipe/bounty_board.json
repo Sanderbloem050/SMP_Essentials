@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "WWW", "WGW", "WWW" ],
+  "key": { "W": "minecraft:dark_oak_planks", "G": "smpessentials:gold_coin" },
+  "result": { "id": "smpessentials:bounty_board", "count": 1 }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [ "smpessentials:gold_coin", "minecraft:iron_ingot", "minecraft:iron_ingot" ],
+  "result": { "id": "smpessentials:silver_key", "count": 1 }
+}

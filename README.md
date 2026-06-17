@@ -26,7 +26,7 @@
 | 🏦 **Bank-blok** | Craftbaar ATM-blok om je wallet te beheren zonder commando's |
 | ⛏️ **Jobs** | Verdien automatisch munten met minen en oogsten |
 | 🔨 **Veilinghuis** | Speler-tot-speler marktplaats met klikbare chat-knoppen |
-| 🏪 **Shopkeeper-NPC** | Instelbare winkel met kist-voorraad, eigen GUI en vanilla handelsscherm |
+| 🏪 **Shopkeeper-NPC** | Instelbare winkel met kist-voorraad, koop- én verkoopmodus, eigen GUI en vanilla handelsscherm |
 | 🎁 **Loot Crates** | Schatkisten die je met een sleutel opent voor willekeurige beloningen |
 | 🏡 **Land & Claims** | Claim chunks, bescherm tegen grief, trust voor vrienden, zichtbare grenzen |
 | 🧭 **Quality of Life** | Homes, warps, `/spawn`, teleport-verzoeken (`/tpa`), `/back` en death-chests |
@@ -128,7 +128,7 @@ Volledige uitleg, voorbeelden en GUI-screenshots: zie de [wiki](https://sanderbl
 - [x] Homes, warps, spawn, tpa, `/back`, death-chest
 - [x] Loot crates, bounties & NPC-quests
 - [x] Server-instellingenvenster (`/smpadmin`)
-- [ ] Koop-én-verkoop-shops
+- [x] Koop-én-verkoop-shops (SELL + BUY mode per artikel)
 - [ ] Server-brede events
 
 ## 📜 Licentie

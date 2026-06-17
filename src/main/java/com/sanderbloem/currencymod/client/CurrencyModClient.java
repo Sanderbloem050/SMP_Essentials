@@ -15,6 +15,9 @@ public class CurrencyModClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.QUEST_SEEKER, QuestSeekerRenderer::new);
         MenuScreens.register(ModMenus.ADMIN_SHOP, AdminShopScreen::new);
         MenuScreens.register(ModMenus.ATM_MENU, AtmScreen::new);
+        MenuScreens.register(ModMenus.BOUNTY_BOARD_MENU, BountyBoardScreen::new);
+        MenuScreens.register(ModMenus.AUCTION_TERMINAL, AuctionTerminalScreen::new);
         MenuScreens.register(ModMenus.CONFIG_MENU, ConfigScreen::new);
+        MenuScreens.register(ModMenus.QUEST_BOARD_MENU, QuestBoardScreen::new);
     }
 }

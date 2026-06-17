@@ -2,6 +2,8 @@ package com.sanderbloem.currencymod.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.sanderbloem.currencymod.claims.ClaimsData;
+import com.sanderbloem.currencymod.config.ModConfig;
+import com.sanderbloem.currencymod.data.WalletData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -34,8 +36,27 @@ public class ClaimCommands {
                         owner.equals(p.getUUID()) ? "§cDeze chunk is al van jou." : "§cDeze chunk is al geclaimd."));
                 return 0;
             }
+            ModConfig cfg = ModConfig.get(server(p));
+            int max = cfg.maxClaimsPerPlayer;
+            if (max > 0 && data.countClaims(p.getUUID()) >= max) {
+                ctx.getSource().sendFailure(Component.literal(
+                        "§cJe hebt het maximum aantal claims bereikt (§f" + max + "§c)."));
+                return 0;
+            }
+            long cost = cfg.claimCostPerChunk;
+            if (cost > 0) {
+                WalletData wallet = WalletData.get(server(p));
+                if (!wallet.subtractBalance(p.getUUID(), cost)) {
+                    ctx.getSource().sendFailure(Component.literal(
+                            "§cOnvoldoende saldo. Een chunk claimen kost §6"
+                            + WalletData.formatBalance(cost)
+                            + "§c. Jij hebt §6" + WalletData.formatBalance(wallet.getBalance(p.getUUID())) + "§c."));
+                    return 0;
+                }
+            }
             data.claim(key, p.getUUID());
-            ctx.getSource().sendSuccess(() -> Component.literal("§aChunk geclaimd! §7(" + key + ")"), false);
+            String costMsg = cost > 0 ? " §7(kosten: §6" + WalletData.formatBalance(cost) + "§7)" : "";
+            ctx.getSource().sendSuccess(() -> Component.literal("§aChunk geclaimd!" + costMsg), false);
             return 1;
         }));
 

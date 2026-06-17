@@ -39,6 +39,7 @@ public class CurrencyMod implements ModInitializer {
             com.sanderbloem.currencymod.commands.QuestGiverCommand.register(dispatcher);
             com.sanderbloem.currencymod.commands.QuestSeekerCommand.register(dispatcher);
             com.sanderbloem.currencymod.commands.AdminCommand.register(dispatcher);
+            com.sanderbloem.currencymod.commands.QuestBoardCommands.register(dispatcher);
         });
 
         // Claim-protectie: breken
@@ -65,6 +66,8 @@ public class CurrencyMod implements ModInitializer {
 
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(
                 com.sanderbloem.currencymod.claims.ClaimBorders::tick);
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(
+                com.sanderbloem.currencymod.quests.QuestEvents::tick);
 
         net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, be) -> {
             if (world.isClientSide()) return;
