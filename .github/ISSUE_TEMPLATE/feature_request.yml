@@ -1,0 +1,18 @@
+name: Feature request
+description: Stel een nieuwe feature voor
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Omschrijf de feature
+      description: Wat wil je toevoegen? Hoe zou het werken?
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Waarom zou dit handig zijn?
+    validations:
+      required: true

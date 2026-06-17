@@ -10,6 +10,7 @@
 ![Loader](https://img.shields.io/badge/Loader-Fabric-DBB776?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-In%20ontwikkeling-orange?style=flat-square)
+![Build](https://github.com/Sanderbloem050/SMP_Essentials/actions/workflows/build.yml/badge.svg)
 
 📖 [Bekijk de volledige wiki](https://sanderbloem050.github.io/SMP_Essentials/)
 
@@ -48,7 +49,7 @@
 Vereisten: **JDK 25**, Gradle wrapper is meegeleverd.
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Sanderbloem050/SMP_Essentials.git
 cd currency-mod-fabric
 ./gradlew build
 ```
